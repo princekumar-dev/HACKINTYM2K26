@@ -63,6 +63,8 @@ export class CodeAnalysisService {
         timestamp: new Date(),
       };
     } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+
       return {
         code,
         language,
@@ -70,7 +72,7 @@ export class CodeAnalysisService {
         healthScore: 0,
         performanceScore: 0,
         maintainabilityScore: 0,
-        issues: [`Parse error: ${error.message}`],
+        issues: [`Parse error: ${errorMessage}`],
         suggestions: [
           'Fix syntax errors in the code',
           'Ensure code is valid JavaScript/TypeScript',
@@ -118,7 +120,10 @@ export class CodeAnalysisService {
       ArrowFunctionExpression() {
         count++;
       },
-      MethodDefinition() {
+      ClassMethod() {
+        count++;
+      },
+      ObjectMethod() {
         count++;
       },
     });

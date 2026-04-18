@@ -5,6 +5,7 @@ import MetricsPanel from "@/components/dashboard/MetricsPanel";
 import ControlPanel from "@/components/dashboard/ControlPanel";
 import LogsPanel from "@/components/dashboard/LogsPanel";
 import MonitorPanel from "@/components/dashboard/MonitorPanel";
+import SimulationResultsPanel from "@/components/dashboard/SimulationResultsPanel";
 import { useSimStore } from "@/store/simStore";
 
 const Index = () => {
@@ -34,20 +35,25 @@ const Index = () => {
           <MetricsPanel />
         </aside>
 
-        <section className="col-span-6 panel relative overflow-hidden flex flex-col">
-          <div className="absolute top-4 left-4 z-10 flex items-center gap-2">
-            <div className="size-1.5 rounded-full bg-bio-cyan animate-pulse" />
-            <span className="font-mono text-[10px] text-bio-cyan uppercase tracking-widest">Topology Matrix</span>
+        <section className="col-span-6 flex flex-col gap-4 min-h-0">
+          <div className="panel relative overflow-hidden flex flex-col min-h-[320px]">
+            <div className="absolute top-4 left-4 z-10 flex items-center gap-2">
+              <div className="size-1.5 rounded-full bg-bio-cyan animate-pulse" />
+              <span className="font-mono text-[10px] text-bio-cyan uppercase tracking-widest">Topology Matrix</span>
+            </div>
+            <div className="absolute top-4 right-4 z-10 font-mono text-[10px] text-muted-foreground uppercase tracking-widest">
+              Drag / Scroll / Click nodes
+            </div>
+            <div className="flex-1">
+              <NetworkGraph3D />
+            </div>
           </div>
-          <div className="absolute top-4 right-4 z-10 font-mono text-[10px] text-muted-foreground uppercase tracking-widest">
-            Drag / Scroll / Click nodes
-          </div>
-          <div className="flex-1">
-            <NetworkGraph3D />
+          <div className="min-h-0 overflow-y-auto">
+            <SimulationResultsPanel />
           </div>
         </section>
 
-        <aside className="col-span-3 flex flex-col gap-4 min-h-0">
+        <aside className="col-span-3 flex flex-col gap-4 min-h-0 overflow-y-auto">
           <ControlPanel />
           <LogsPanel />
         </aside>

@@ -2,6 +2,36 @@ import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 
+function isMongoConnectionError(error: unknown): boolean {
+  if (!(error instanceof Error)) {
+    return false;
+  }
+
+  return (
+    error.name === 'MongoServerSelectionError' ||
+    (error.message.includes('ECONNREFUSED') && error.message.includes('27017'))
+  );
+}
+
+process.on('unhandledRejection', (reason) => {
+  if (isMongoConnectionError(reason)) {
+    console.warn('MongoDB is unavailable. Backend will continue without database connectivity.');
+    return;
+  }
+
+  console.error('Unhandled promise rejection:', reason);
+});
+
+process.on('uncaughtException', (error) => {
+  if (isMongoConnectionError(error)) {
+    console.warn('MongoDB is unavailable. Backend will continue without database connectivity.');
+    return;
+  }
+
+  console.error('Uncaught exception:', error);
+  process.exit(1);
+});
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 

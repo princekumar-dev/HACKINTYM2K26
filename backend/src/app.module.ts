@@ -8,7 +8,18 @@ import { ConfigService } from './common/config/config.service';
 
 @Module({
   imports: [
-    MongooseModule.forRoot(process.env.MONGODB_URI || 'mongodb://localhost:27017/hackintym2k26'),
+    MongooseModule.forRoot(
+      process.env.MONGODB_URI || 'mongodb://localhost:27017/hackintym2k26',
+      {
+        lazyConnection: true,
+        retryAttempts: 0,
+        onConnectionCreate: (connection) => {
+          connection.on('error', (error: Error) => {
+            console.warn(`MongoDB connection unavailable: ${error.message}`);
+          });
+        },
+      },
+    ),
     MonitoringModule,
     AnalysisModule,
     FeaturesModule,

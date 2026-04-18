@@ -11,6 +11,8 @@ export default function ControlPanel() {
   const failureScenarios = useSimStore((s) => s.failureScenarios);
   const runScenario = useSimStore((s) => s.runScenario);
   const routingStrategy = useSimStore((s) => s.routingStrategy);
+  const simulationRunning = useSimStore((s) => s.simulationRunning);
+  const runStressSimulation = useSimStore((s) => s.runStressSimulation);
 
   return (
     <div className="panel p-5 flex flex-col gap-5">
@@ -80,7 +82,7 @@ export default function ControlPanel() {
       <div className="flex flex-col gap-2">
         <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">Scenario Injection</span>
         <div className="flex flex-col gap-2">
-          {failureScenarios.slice(0, 3).map((scenario) => (
+          {failureScenarios.slice(0, 5).map((scenario) => (
             <button
               key={scenario.id}
               onClick={() => runScenario(scenario.id)}
@@ -94,6 +96,13 @@ export default function ControlPanel() {
             </button>
           ))}
         </div>
+        <Button
+          onClick={() => void runStressSimulation()}
+          variant="outline"
+          className="font-mono text-[10px] uppercase border-bio-cyan/30 text-bio-cyan hover:bg-bio-cyan/10 hover:text-bio-cyan bg-transparent"
+        >
+          {simulationRunning ? "Running..." : "Run Stress Matrix"}
+        </Button>
       </div>
 
       {routingStrategy && (

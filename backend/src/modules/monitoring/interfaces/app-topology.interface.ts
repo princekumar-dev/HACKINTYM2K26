@@ -56,6 +56,8 @@ export interface AppTopologyAnalysis {
     overallScore: number;
     frontendScore: number;
     backendScore: number;
+    frontendReachable: boolean;
+    backendReachable: boolean;
     predictedFailureNodeId: string | null;
     predictedFailureWindow: string;
     summary: string;
@@ -67,4 +69,76 @@ export interface AppTopologyAnalysis {
   };
   healingDecisions: HealingDecision[];
   failureScenarios: FailureScenario[];
+}
+
+export interface ProbeSnapshot {
+  url: string;
+  samples: number;
+  successRate: number;
+  avgLatency: number;
+  peakLatency: number;
+  unhealthyResponses: number;
+}
+
+export interface SimulationStep {
+  requestCount: number;
+  concurrency: number;
+  latency: number;
+  cpu: number;
+  errorRate: number;
+  status: 'stable' | 'degraded' | 'critical' | 'crashed';
+}
+
+export interface ScenarioSimulation {
+  id: string;
+  title: string;
+  targetNodeId: string;
+  failureMode: 'kill' | 'slow' | 'overload';
+  stressLevel: number;
+  crashProbability: number;
+  recoverable: boolean;
+  predictedFailureStressLevel: number | null;
+  predictedFailureRequestCount: number | null;
+  crashNodeId: string | null;
+  failureReason: string;
+  rerouteFix: string;
+  cloneServerActivated: boolean;
+  backupServerUrl: string;
+  failoverTriggeredAtRequestCount: number | null;
+  totalUsersAtFailure: number;
+  realUserRatio: number;
+  dummyUserRatio: number;
+  realUsersKeptOnPrimary: number;
+  realUsersShiftedToBackup: number;
+  dummyUsersShiftedToBackup: number;
+  droppedDummyUsers: number;
+  primaryTrafficShare: number;
+  backupTrafficShare: number;
+  availabilityBeforeFix: number;
+  availabilityAfterFix: number;
+  timeline: SimulationStep[];
+}
+
+export interface AppResilienceSimulationReport {
+  simulatedAt: string;
+  target: {
+    host: string;
+    frontendUrl: string;
+    backendUrl: string;
+    cloneBackendUrl: string;
+  };
+  baseline: {
+    frontend: ProbeSnapshot;
+    backend: ProbeSnapshot;
+  };
+  summary: {
+    totalScenarios: number;
+    crashedScenarios: number;
+    earliestFailureStressLevel: number | null;
+    earliestFailureRequestCount: number | null;
+    likelyCrashNodeId: string | null;
+    stressLevel: number;
+    recommendation: string;
+  };
+  scenarios: ScenarioSimulation[];
 }

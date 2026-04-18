@@ -6,8 +6,10 @@ export default function MetricsPanel() {
   const selectedId = useSimStore((s) => s.selectedNodeId);
   const monitor = useSimStore((s) => s.monitor);
   const predictedFailureId = useSimStore((s) => s.predictedFailureId);
+  const simulationSummary = useSimStore((s) => s.simulationSummary);
   const selected = nodes.find((n) => n.id === selectedId);
   const predicted = nodes.find((n) => n.id === predictedFailureId);
+  const likelyCrashNode = nodes.find((n) => n.id === simulationSummary?.likelyCrashNodeId);
 
   const avgLatency = nodes.reduce((s, n) => s + n.latency, 0) / nodes.length;
   const healthy = nodes.filter((n) => n.status === "healthy").length;
@@ -63,6 +65,29 @@ export default function MetricsPanel() {
           </div>
           <div className="mt-2 text-sm text-foreground/85">
             {predicted ? `${predicted.label} is the current highest-risk node.` : monitor.summary}
+          </div>
+          {simulationSummary && (
+            <div className="mt-2 text-[11px] text-foreground/65 leading-relaxed">
+              {likelyCrashNode
+                ? `Stress simulator says ${likelyCrashNode.label} is the most likely crash point.`
+                : simulationSummary.recommendation}
+            </div>
+          )}
+        </div>
+      )}
+
+      {simulationSummary && (
+        <div className="bg-surface-2 rounded-lg p-3 border border-white/5">
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] uppercase tracking-widest text-muted-foreground">Crash Readiness</span>
+            <span className="font-mono text-[10px] text-bio-amber">
+              {simulationSummary.averageResilience}/100
+            </span>
+          </div>
+          <div className="mt-2 text-sm text-foreground/85">
+            {simulationSummary.crashThresholdTraffic
+              ? `Predicted first crash near ${simulationSummary.crashThresholdTraffic} concurrent-request pressure in the multi-case simulation.`
+              : "No crash predicted in the current multi-case matrix."}
           </div>
         </div>
       )}

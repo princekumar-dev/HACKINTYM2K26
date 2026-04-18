@@ -28,6 +28,7 @@ export default function MonitorPanel() {
       : monitor?.status === "down"
       ? "text-bio-coral"
       : "text-muted-foreground";
+  const modeLabel = monitor?.mode === "offline" ? "offline" : "live";
 
   return (
     <div className="panel p-5 flex flex-col gap-4">
@@ -68,6 +69,10 @@ export default function MonitorPanel() {
             <span className="font-mono text-[11px] text-foreground/80 truncate">{monitor.frontendUrl}</span>
             <span className={`font-mono text-[11px] uppercase ${statusColor}`}>{monitor.status}</span>
           </div>
+          <div className="flex items-center justify-between gap-3 text-[10px] font-mono uppercase tracking-widest text-muted-foreground">
+            <span>{modeLabel} scan</span>
+            <span>auto re-scan: 8s</span>
+          </div>
 
           <div className="grid grid-cols-3 gap-2">
             <MetricCard label="Overall" value={`${monitor.overallScore}`} accent="text-bio-cyan" />
@@ -78,7 +83,7 @@ export default function MonitorPanel() {
           <div className="bg-surface-2 rounded-lg p-3 border border-white/5">
             <div className="text-[9px] uppercase tracking-widest text-muted-foreground">AI Summary</div>
             <p className="text-xs text-foreground/80 mt-2 leading-relaxed">{monitor.summary}</p>
-            <div className="mt-2 font-mono text-[10px] text-bio-cyan/80">
+            <div className={`mt-2 font-mono text-[10px] ${monitor.mode === "offline" ? "text-bio-coral/90" : "text-bio-cyan/80"}`}>
               Risk window: {monitor.predictedFailureWindow ?? "watching"}
             </div>
           </div>

@@ -9,7 +9,7 @@ export class FeatureLoadTest extends Document {
   @Prop()
   releaseDate: Date;
 
-  @Prop()
+  @Prop({ type: Object })
   baselineMetrics: {
     cpuUsage: number;
     memoryUsage: number;
@@ -17,7 +17,7 @@ export class FeatureLoadTest extends Document {
     throughput: number;
   };
 
-  @Prop()
+  @Prop({ type: Object })
   featureMetrics: {
     cpuUsage: number;
     memoryUsage: number;
@@ -25,7 +25,7 @@ export class FeatureLoadTest extends Document {
     throughput: number;
   };
 
-  @Prop()
+  @Prop({ type: Object })
   loadTestResults: {
     normalLoad: object;
     mediumLoad: object;
